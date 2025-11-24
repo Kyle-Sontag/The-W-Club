@@ -1,5 +1,31 @@
 require 'csv'
 
+# Seed provinces with real Canadian tax rates
+puts "Creating provinces..."
+Province.destroy_all
+
+provinces_data = [
+  { name: "Alberta", gst_rate: 5.0, pst_rate: 0.0, hst_rate: 0.0 },
+  { name: "British Columbia", gst_rate: 5.0, pst_rate: 7.0, hst_rate: 0.0 },
+  { name: "Manitoba", gst_rate: 5.0, pst_rate: 7.0, hst_rate: 0.0 },
+  { name: "New Brunswick", gst_rate: 0.0, pst_rate: 0.0, hst_rate: 15.0 },
+  { name: "Newfoundland and Labrador", gst_rate: 0.0, pst_rate: 0.0, hst_rate: 15.0 },
+  { name: "Northwest Territories", gst_rate: 5.0, pst_rate: 0.0, hst_rate: 0.0 },
+  { name: "Nova Scotia", gst_rate: 0.0, pst_rate: 0.0, hst_rate: 15.0 },
+  { name: "Nunavut", gst_rate: 5.0, pst_rate: 0.0, hst_rate: 0.0 },
+  { name: "Ontario", gst_rate: 0.0, pst_rate: 0.0, hst_rate: 13.0 },
+  { name: "Prince Edward Island", gst_rate: 0.0, pst_rate: 0.0, hst_rate: 15.0 },
+  { name: "Quebec", gst_rate: 5.0, pst_rate: 9.975, hst_rate: 0.0 },
+  { name: "Saskatchewan", gst_rate: 5.0, pst_rate: 6.0, hst_rate: 0.0 },
+  { name: "Yukon", gst_rate: 5.0, pst_rate: 0.0, hst_rate: 0.0 }
+]
+
+provinces_data.each do |data|
+  Province.create!(data)
+end
+
+puts "Created #{Province.count} provinces"
+
 puts "Clearing existing data..."
 Product.destroy_all
 Category.destroy_all
