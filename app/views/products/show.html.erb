@@ -1,39 +1,42 @@
-<div class="product-detail">
-  <div class="product-image">
+<div class="row">
+  <div class="col-md-6">
     <% if @product.image.attached? %>
-      <%= image_tag @product.image, alt: @product.name %>
+      <%= image_tag @product.image, alt: @product.name, class: "img-fluid" %>
     <% else %>
-      <div class="no-image">No Image Available</div>
+      <div class="bg-secondary text-white text-center py-5">No Image Available</div>
     <% end %>
   </div>
 
-  <div class="product-info">
+  <div class="col-md-6">
     <h1><%= @product.name %></h1>
 
-    <p class="category">
-      Category: <%= link_to @product.category.name, "#" %>
+    <p class="text-muted">
+      Category: <%= link_to @product.category.name, category_path(@product.category) %>
     </p>
 
-    <div class="price-section">
+    <div class="mb-3">
       <% if @product.sale_price %>
-        <p class="original-price"><del>$<%= number_with_precision(@product.price, precision: 2) %></del></p>
-        <p class="sale-price">Sale Price: $<%= number_with_precision(@product.sale_price, precision: 2) %></p>
+        <p class="text-decoration-line-through text-muted">$<%= number_with_precision(@product.price, precision: 2) %></p>
+        <h3 class="text-danger">Sale Price: $<%= number_with_precision(@product.sale_price, precision: 2) %></h3>
       <% else %>
-        <p class="price">$<%= number_with_precision(@product.price, precision: 2) %></p>
+        <h3>$<%= number_with_precision(@product.price, precision: 2) %></h3>
       <% end %>
     </div>
 
-    <div class="description">
-      <h3>Description</h3>
+    <div class="mb-4">
+      <h5>Description</h5>
       <p><%= @product.description %></p>
     </div>
 
-    <%= link_to "Back to Products", root_path, class: "back-link" %>
+    <%= link_to "Back to Products", root_path, class: "btn btn-primary" %>
   </div>
 </div>
+
+<hr class="my-5">
+
 <div class="related-products">
-  <h2>More from <%= @product.category.name %></h2>
-  <div class="products">
+  <h2 class="mb-4">More from <%= @product.category.name %></h2>
+  <div class="row">
     <%= render partial: 'product_card', collection: @product.category.products.where.not(id: @product.id).limit(4), as: :product %>
   </div>
 </div>

@@ -1,15 +1,21 @@
-<div class="product-card">
-  <% if product.image.attached? %>
-    <%= image_tag product.image, alt: product.name %>
-  <% else %>
-    <div class="no-image">No Image</div>
-  <% end %>
+<div class="col-md-3 mb-4">
+  <div class="card h-100">
+    <% if product.image.attached? %>
+      <%= image_tag product.image, alt: product.name, class: "card-img-top" %>
+    <% else %>
+      <div class="card-img-top bg-secondary text-white text-center py-5">No Image</div>
+    <% end %>
 
-  <h3><%= link_to product.name, product_path(product) %></h3>
-  <p class="category"><%= product.category.name %></p>
-  <p class="price">$<%= number_with_precision(product.price, precision: 2) %></p>
+    <div class="card-body">
+      <h5 class="card-title"><%= link_to product.name, product_path(product), class: "text-decoration-none" %></h5>
+      <p class="card-text text-muted"><%= product.category.name %></p>
 
-  <% if product.sale_price %>
-    <p class="sale-price">Sale: $<%= number_with_precision(product.sale_price, precision: 2) %></p>
-  <% end %>
+      <% if product.sale_price %>
+        <p class="text-decoration-line-through text-muted">$<%= number_with_precision(product.price, precision: 2) %></p>
+        <p class="text-danger fw-bold">Sale: $<%= number_with_precision(product.sale_price, precision: 2) %></p>
+      <% else %>
+        <p class="fw-bold">$<%= number_with_precision(product.price, precision: 2) %></p>
+      <% end %>
+    </div>
+  </div>
 </div>
