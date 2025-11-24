@@ -1,6 +1,8 @@
 class ProductsController < ApplicationController
   def index
-    @products = Product.all
+    # Shows featured products, if there are no featured products shows 20 random products
+    @products = Product.where(featured: true).limit(20)
+    @products = Product.order("RANDOM()").limit(20) if @products.empty?
   end
 
   def show
