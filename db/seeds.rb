@@ -59,7 +59,15 @@ csv_files.each do |filename, category|
   CSV.foreach(csv_path, headers: true) do |row|
     next if row['title'].blank?
 
-    price = row['new-price']&.gsub('C$', '')&.strip&.to_f
+    # For sale items, use old-price as price and new-price as sale_price
+    if filename == 'sale.csv' && row['old-price'].present?
+      price = row['old-price']&.gsub('C$', '')&.strip&.to_f
+      sale_price = row['new-price']&.gsub('C$', '')&.strip&.to_f
+    else
+      price = row['new-price']&.gsub('C$', '')&.strip&.to_f
+      sale_price = nil
+    end
+
     next if price.nil? || price <= 0
 
     product = Product.create!(
@@ -67,7 +75,7 @@ csv_files.each do |filename, category|
       name: row['title'],
       description: row['description'].presence || "Official Winnipeg Blue Bombers merchandise",
       price: price,
-      sale_price: (filename == 'sale.csv' ? price : nil),
+      sale_price: sale_price,
       image_url: row['first src']
     )
 
