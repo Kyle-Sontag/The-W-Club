@@ -51,6 +51,8 @@ csv_files = {
   'sale.csv' => categories[:sale]
 }
 
+require 'open-uri'
+
 csv_files.each do |filename, category|
   csv_path = Rails.root.join('db', 'data', filename)
 
@@ -60,7 +62,7 @@ csv_files.each do |filename, category|
     price = row['new-price']&.gsub('C$', '')&.strip&.to_f
     next if price.nil? || price <= 0
 
-    Product.create!(
+    product = Product.create!(
       category: category,
       name: row['title'],
       description: row['description'].presence || "Official Winnipeg Blue Bombers merchandise",
@@ -68,6 +70,17 @@ csv_files.each do |filename, category|
       sale_price: (filename == 'sale.csv' ? price : nil),
       image_url: row['first src']
     )
+
+    # Attach image from URL if available
+    image_url = row['first src']
+    if image_url.present?
+      begin
+        file = URI.open(image_url)
+        product.image.attach(io: file, filename: "#{product.id}.jpg")
+      rescue => e
+        puts "  Could not download image for #{product.name}"
+      end
+    end
   end
 end
 
