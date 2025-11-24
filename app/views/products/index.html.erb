@@ -1,21 +1,5 @@
-<h1>The W Club - Offical store for the Winnipeg Blue Bombers</h1>
+<h1>The W Club - Official Winnipeg Blue Bombers Store</h1>
 
 <div class="products">
-  <% @products.each do |product| %>
-    <div class="product-card">
-      <% if product.image.attached? %>
-        <%= image_tag product.image, alt: product.name %>
-      <% else %>
-        <div class="no-image">No Image</div>
-      <% end %>
-
-      <h3><%= link_to product.name, product_path(product) %></h3>
-      <p class="category"><%= product.category.name %></p>
-      <p class="price">$<%= number_with_precision(product.price, precision: 2) %></p>
-
-      <% if product.sale_price %>
-        <p class="sale-price">Sale: $<%= number_with_precision(product.sale_price, precision: 2) %></p>
-      <% end %>
-    </div>
-  <% end %>
+  <%= render partial: 'product_card', collection: @products, as: :product %>
 </div>

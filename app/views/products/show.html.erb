@@ -31,3 +31,9 @@
     <%= link_to "Back to Products", root_path, class: "back-link" %>
   </div>
 </div>
+<div class="related-products">
+  <h2>More from <%= @product.category.name %></h2>
+  <div class="products">
+    <%= render partial: 'product_card', collection: @product.category.products.where.not(id: @product.id).limit(4), as: :product %>
+  </div>
+</div>
