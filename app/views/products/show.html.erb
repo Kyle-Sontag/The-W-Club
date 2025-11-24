@@ -1,2 +1,33 @@
-<h1>Products#show</h1>
-<p>Find me in app/views/products/show.html.erb</p>
+<div class="product-detail">
+  <div class="product-image">
+    <% if @product.image.attached? %>
+      <%= image_tag @product.image, alt: @product.name %>
+    <% else %>
+      <div class="no-image">No Image Available</div>
+    <% end %>
+  </div>
+
+  <div class="product-info">
+    <h1><%= @product.name %></h1>
+
+    <p class="category">
+      Category: <%= link_to @product.category.name, "#" %>
+    </p>
+
+    <div class="price-section">
+      <% if @product.sale_price %>
+        <p class="original-price"><del>$<%= number_with_precision(@product.price, precision: 2) %></del></p>
+        <p class="sale-price">Sale Price: $<%= number_with_precision(@product.sale_price, precision: 2) %></p>
+      <% else %>
+        <p class="price">$<%= number_with_precision(@product.price, precision: 2) %></p>
+      <% end %>
+    </div>
+
+    <div class="description">
+      <h3>Description</h3>
+      <p><%= @product.description %></p>
+    </div>
+
+    <%= link_to "Back to Products", root_path, class: "back-link" %>
+  </div>
+</div>
