@@ -1,0 +1,16 @@
+<nav class="navbar">
+  <div class="navbar-brand">
+    <%= link_to "The W Club", root_path %>
+  </div>
+
+  <div class="navbar-links">
+    <%= link_to "Home", root_path, class: "nav-link" %>
+
+    <% Category.all.each do |category| %>
+      <%= link_to category.name, category_path(category), class: "nav-link" %>
+    <% end %>
+
+    <!-- Cart button - will add later -->
+    <!-- <%= link_to "Cart", "#", class: "nav-link" %> -->
+  </div>
+</nav>
