@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_24_035809) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_24_040734) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -31,6 +31,20 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_24_035809) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "orders", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "address_id", null: false
+    t.string "status"
+    t.decimal "subtotal", precision: 8, scale: 2
+    t.decimal "tax", precision: 8, scale: 2
+    t.decimal "total", precision: 8, scale: 2
+    t.string "third_party_payment_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["address_id"], name: "index_orders_on_address_id"
+    t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
   create_table "products", force: :cascade do |t|
@@ -67,5 +81,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_24_035809) do
 
   add_foreign_key "addresses", "provinces"
   add_foreign_key "addresses", "users"
+  add_foreign_key "orders", "addresses"
+  add_foreign_key "orders", "users"
   add_foreign_key "products", "categories"
 end
