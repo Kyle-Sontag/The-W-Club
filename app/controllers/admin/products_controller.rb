@@ -42,7 +42,7 @@ class Admin::ProductsController < Admin::BaseController
   def create
     @product = Product.new(product_params)
     if @product.save
-      redirect_to admin_products_path, notice: "Product created successfully"
+      redirect_to admin_products_path(session[:product_filters]), notice: "Product created successfully"
     else
       render :new
     end
@@ -50,12 +50,20 @@ class Admin::ProductsController < Admin::BaseController
 
   def edit
     @product = Product.find(params[:id])
+    # Store the current filters in session
+    session[:product_filters] = {
+      search: params[:search],
+      category_id: params[:category_id],
+      sort: params[:sort],
+      page: params[:page],
+      anchor: "product-#{@product.id}"
+    }.compact
   end
 
   def update
     @product = Product.find(params[:id])
     if @product.update(product_params)
-      redirect_to admin_products_path, notice: "Product updated successfully"
+      redirect_to admin_products_path(session[:product_filters] || {}), notice: "Product updated successfully"
     else
       render :edit
     end
@@ -64,7 +72,7 @@ class Admin::ProductsController < Admin::BaseController
   def destroy
     @product = Product.find(params[:id])
     @product.destroy
-    redirect_to admin_products_path, notice: "Product deleted successfully"
+    redirect_to admin_products_path(session[:product_filters] || {}), notice: "Product deleted successfully"
   end
 
   private
