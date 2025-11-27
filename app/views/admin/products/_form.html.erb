@@ -48,7 +48,7 @@
   <div class="mb-3">
     <%= f.label :image, class: "form-label" %>
     <%= f.file_field :image, class: "form-control" %>
-    <% if @product.image.attached? %>
+    <% if @product.persisted? && @product.image.attached? %>
       <div class="mt-2">
         <%= image_tag @product.image, size: "200x200" %>
       </div>
