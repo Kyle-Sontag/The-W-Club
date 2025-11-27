@@ -13,13 +13,14 @@
         </li>
 
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="categoriesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Categories
           </a>
-          <ul class="dropdown-menu" aria-labelledby="categoriesDropdown">
+          <ul class="dropdown-menu">
             <% Category.all.each do |category| %>
               <li><%= link_to category.name, category_path(category), class: "dropdown-item" %></li>
             <% end %>
+            <li><%= link_to "Sale", sale_path, class: "dropdown-item" %></li>
           </ul>
         </li>
       </ul>

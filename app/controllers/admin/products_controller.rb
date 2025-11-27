@@ -7,9 +7,13 @@ class Admin::ProductsController < Admin::BaseController
       @products = @products.where("name ILIKE ?", "%#{params[:search]}%")
     end
 
-    # Filter by category if selected
+    # Filter by category or sale items
     if params[:category_id].present?
-      @products = @products.where(category_id: params[:category_id])
+      if params[:category_id] == "sale"
+        @products = @products.where.not(sale_price: nil)
+      else
+        @products = @products.where(category_id: params[:category_id])
+      end
     end
 
     # Sort based on selection
