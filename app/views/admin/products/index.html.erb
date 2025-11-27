@@ -3,6 +3,53 @@
   <%= link_to "New Product", new_admin_product_path, class: "btn btn-primary" %>
 </div>
 
+<div class="card mb-4">
+  <div class="card-body">
+    <%= form_with url: admin_products_path, method: :get, local: true, class: "row g-3" do |f| %>
+      <div class="col-md-4">
+        <%= f.label :category_id, "Filter by Category", class: "form-label" %>
+        <%= f.select :category_id,
+            options_from_collection_for_select(Category.all, :id, :name, params[:category_id]),
+            { prompt: "All Categories" },
+            { class: "form-select", onchange: "this.form.submit()" } %>
+      </div>
+
+      <div class="col-md-4">
+        <%= f.label :sort, "Sort by", class: "form-label" %>
+        <%= f.select :sort,
+            options_for_select([
+              ['Newest First', 'created_at_desc'],
+              ['Name (A-Z)', 'name_asc'],
+              ['Name (Z-A)', 'name_desc'],
+              ['Price (Low to High)', 'price_asc'],
+              ['Price (High to Low)', 'price_desc'],
+              ['Featured First', 'featured']
+            ], params[:sort]),
+            {},
+            { class: "form-select", onchange: "this.form.submit()" } %>
+      </div>
+
+      <div class="col-md-4 d-flex align-items-end">
+        <%= link_to "Clear Filters", admin_products_path, class: "btn btn-secondary" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<% if params[:category_id].present? || params[:sort].present? %>
+  <div class="alert alert-info">
+    Showing
+    <% if params[:category_id].present? %>
+      <strong><%= Category.find(params[:category_id]).name %></strong> products
+    <% else %>
+      all products
+    <% end %>
+    <% if params[:sort].present? %>
+      sorted by <strong><%= params[:sort].humanize %></strong>
+    <% end %>
+  </div>
+<% end %>
+
 <div class="table-responsive">
   <table class="table table-striped">
     <thead>
@@ -56,7 +103,12 @@
 </div>
 
 <div class="d-flex justify-content-center my-4">
-  <%= paginate @products %>
+  <%= paginate @products, params: { category_id: params[:category_id], sort: params[:sort] } %>
 </div>
 
-<p class="text-muted">Total: <%= @products.count %> products</p>
+<p class="text-muted">
+  Showing <%= @products.count %> of <%= Product.count %> total products
+  <% if params[:category_id].present? %>
+    (filtered by category)
+  <% end %>
+</p>

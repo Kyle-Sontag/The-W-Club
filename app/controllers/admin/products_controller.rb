@@ -1,6 +1,29 @@
 class Admin::ProductsController < Admin::BaseController
   def index
-    @products = Product.all.order(created_at: :desc).page(params[:page]).per(50)
+    @products = Product.all
+
+    # Filter by category if selected
+    if params[:category_id].present?
+      @products = @products.where(category_id: params[:category_id])
+    end
+
+    # Sort based on selection
+    @products = case params[:sort]
+    when "name_asc"
+                  @products.order(:name)
+    when "name_desc"
+                  @products.order(name: :desc)
+    when "price_asc"
+                  @products.order(:price)
+    when "price_desc"
+                  @products.order(price: :desc)
+    when "featured"
+                  @products.order(featured: :desc, created_at: :desc)
+    else
+                  @products.order(created_at: :desc)
+    end
+
+    @products = @products.page(params[:page]).per(50)
   end
 
   def new
