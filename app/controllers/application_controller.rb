@@ -1,4 +1,9 @@
 class ApplicationController < ActionController::Base
-  # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
-  allow_browser versions: :modern
+  private
+
+  def authenticate_admin!
+    authenticate_or_request_with_http_basic("Admin Area") do |username, password|
+      username == "admin" && password == "password123"
+    end
+  end
 end
