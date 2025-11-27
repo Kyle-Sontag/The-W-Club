@@ -2,6 +2,11 @@ class Admin::ProductsController < Admin::BaseController
   def index
     @products = Product.all
 
+    # Search by name
+    if params[:search].present?
+      @products = @products.where("name ILIKE ?", "%#{params[:search]}%")
+    end
+
     # Filter by category if selected
     if params[:category_id].present?
       @products = @products.where(category_id: params[:category_id])
