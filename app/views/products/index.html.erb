@@ -1,5 +1,29 @@
-<h1 class="mb-4">Featured Products</h1>
-
-<div class="row">
-  <%= render partial: 'product_card', collection: @products, as: :product %>
+<!-- Hero Banner -->
+<div class="bg-primary text-white text-center py-5 mb-5 rounded">
+  <h1 class="display-4 fw-bold">The W Club</h1>
+  <p class="lead">Official store for the Winnipeg Blue Bombers</p>
 </div>
+
+<!-- Featured Products Section -->
+<% if @featured_products.any? %>
+  <section class="mb-5">
+    <h2 class="mb-4">Featured Products</h2>
+
+    <div class="overflow-auto">
+      <div class="d-flex gap-3 pb-3">
+        <%= render partial: 'product_card_horizontal', collection: @featured_products, as: :product %>
+      </div>
+    </div>
+  </section>
+<% end %>
+
+<!-- Sale Products Section -->
+<section class="mb-5">
+  <h2 class="mb-4">Items on Sale</h2>
+
+  <div class="overflow-auto">
+    <div class="d-flex gap-3 pb-3">
+      <%= render partial: 'product_card_horizontal', collection: @sale_products, as: :product %>
+    </div>
+  </div>
+</section>

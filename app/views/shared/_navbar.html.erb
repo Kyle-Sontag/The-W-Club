@@ -12,11 +12,16 @@
           <%= link_to "Home", root_path, class: "nav-link" %>
         </li>
 
-        <% Category.all.each do |category| %>
-          <li class="nav-item">
-            <%= link_to category.name, category_path(category), class: "nav-link" %>
-          </li>
-        <% end %>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="categoriesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Categories
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="categoriesDropdown">
+            <% Category.all.each do |category| %>
+              <li><%= link_to category.name, category_path(category), class: "dropdown-item" %></li>
+            <% end %>
+          </ul>
+        </li>
       </ul>
     </div>
   </div>
