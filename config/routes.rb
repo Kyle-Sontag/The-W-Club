@@ -8,6 +8,7 @@ Rails.application.routes.draw do
     resources :categories
   end
 
+  get "search", to: "products#search", as: "search"
   get "sale", to: "categories#sale", as: "sale"
   resources :categories, only: [ :show ]
   resources :products, only: [ :show ]

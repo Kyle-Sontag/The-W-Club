@@ -28,7 +28,7 @@
       <p><%= @product.description %></p>
     </div>
 
-    <%= link_to "Back to Products", root_path, class: "btn btn-primary" %>
+    <%= link_to "← Back to #{@product.category.name}", category_path(@product.category), class: "btn btn-secondary mb-4" %>
   </div>
 </div>
 
