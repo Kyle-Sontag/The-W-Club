@@ -3,10 +3,73 @@
 
 <%= link_to "← Back to Home", root_path, class: "btn btn-secondary mb-4" %>
 
+<!-- Search and Filter Section -->
+<div class="card mb-4">
+  <div class="card-body">
+    <h5 class="card-title mb-3">Search & Filter</h5>
+    <%= form_with url: category_path(@category), method: :get, local: true, class: "row g-3" do |f| %>
+      <div class="col-md-4">
+        <%= f.label :query, "Search", class: "form-label" %>
+        <%= f.text_field :query, value: params[:query], placeholder: "Search products...", class: "form-control" %>
+      </div>
+
+      <div class="col-md-3">
+        <%= f.label :filter, "Filter", class: "form-label" %>
+        <%= f.select :filter,
+            options_for_select([
+              ['All Items', ''],
+              ['Sale Items', 'sale'],
+              ['Recently Updated', 'recent']
+            ], params[:filter]),
+            {},
+            { class: "form-select" } %>
+      </div>
+
+      <div class="col-md-3">
+        <%= f.label :sort, "Sort by", class: "form-label" %>
+        <%= f.select :sort,
+            options_for_select([
+              ['Name (A-Z)', 'name_asc'],
+              ['Name (Z-A)', 'name_desc'],
+              ['Price (Low to High)', 'price_asc'],
+              ['Price (High to Low)', 'price_desc']
+            ], params[:sort]),
+            {},
+            { class: "form-select" } %>
+      </div>
+
+      <div class="col-md-2 d-flex align-items-end">
+        <%= f.submit "Apply", class: "btn btn-primary w-100" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<% if params[:query].present? || params[:filter].present? %>
+  <div class="alert alert-info">
+    Showing <%= @products.total_count %> products
+    <% if params[:query].present? %>
+      matching "<strong><%= params[:query] %></strong>"
+    <% end %>
+    <% if params[:filter] == 'sale' %>
+      <strong>(Sale items only)</strong>
+    <% elsif params[:filter] == 'recent' %>
+      <strong>(Recently updated)</strong>
+    <% end %>
+  </div>
+<% end %>
+
 <div class="row">
   <%= render partial: 'products/product_card', collection: @products, as: :product %>
 </div>
 
 <div class="d-flex justify-content-center my-4">
-  <%= paginate @products %>
+  <%= paginate @products, params: { query: params[:query], filter: params[:filter], sort: params[:sort] } %>
 </div>
+
+<% if @products.empty? %>
+  <div class="alert alert-warning text-center mt-4">
+    <h4>No products found</h4>
+    <p>Try adjusting your search or filter criteria</p>
+  </div>
+<% end %>
