@@ -1,6 +1,6 @@
 <h1>Shopping Cart</h1>
 
-<%= link_to "← Continue Shopping", root_path, class: "btn btn-secondary mb-4" %>
+<%= link_to "← Continue Shopping", session[:return_to] || root_path, class: "btn btn-secondary mb-4" %>
 
 <% if @cart_items.any? %>
   <div class="table-responsive">
@@ -52,7 +52,7 @@
   </div>
 
   <div class="d-flex justify-content-end gap-2 mt-4">
-    <%= link_to "Continue Shopping", root_path, class: "btn btn-secondary" %>
+    <%= link_to "Continue Shopping", session[:return_to] || root_path, class: "btn btn-secondary" %>
     <%= link_to "Proceed to Checkout", "#", class: "btn btn-primary" %>
   </div>
 <% else %>

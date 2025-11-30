@@ -10,6 +10,9 @@ class CartItemsController < ApplicationController
       @cart_item = @current_cart.cart_items.create(product: product, quantity: 1)
     end
 
+    # Store the referring page in session
+    session[:return_to] = request.referer
+
     redirect_to cart_path, notice: "#{product.name} added to cart"
   end
 
