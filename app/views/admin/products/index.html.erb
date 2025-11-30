@@ -92,7 +92,7 @@
         <tr id="product-<%= product.id %>">
           <td>
             <% if product.image.attached? %>
-              <%= image_tag product.image, size: "50x50" %>
+              <%= image_tag product.image.variant(:thumb), size: "50x50" %>
             <% else %>
               <span class="text-muted">No image</span>
             <% end %>

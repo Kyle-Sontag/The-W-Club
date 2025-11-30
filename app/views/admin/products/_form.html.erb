@@ -50,7 +50,7 @@
     <%= f.file_field :image, class: "form-control" %>
     <% if @product.persisted? && @product.image.attached? %>
       <div class="mt-2">
-        <%= image_tag @product.image, size: "200x200" %>
+        <%= image_tag @product.image.variant(:medium), size: "200x200" %>
       </div>
     <% end %>
   </div>

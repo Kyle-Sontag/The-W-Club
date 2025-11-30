@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-md-6">
     <% if @product.image.attached? %>
-      <%= image_tag @product.image, alt: @product.name, class: "img-fluid" %>
+      <%= image_tag @product.image.variant(:large), alt: @product.name, class: "img-fluid" %>
     <% else %>
       <div class="bg-secondary text-white text-center py-5">No Image Available</div>
     <% end %>
