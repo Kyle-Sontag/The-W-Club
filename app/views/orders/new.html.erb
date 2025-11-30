@@ -1,0 +1,130 @@
+<h1>Checkout</h1>
+
+<div class="row">
+  <div class="col-md-8">
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">Order Summary</h5>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Quantity</th>
+              <th>Price</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @cart.cart_items.each do |item| %>
+              <tr>
+                <td><%= item.product.name %></td>
+                <td><%= item.quantity %></td>
+                <td>$<%= number_with_precision(item.product.current_price, precision: 2) %></td>
+                <td>$<%= number_with_precision(item.total_price, precision: 2) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Shipping Address</h5>
+
+        <% if @addresses.any? %>
+          <%= form_with url: orders_path, method: :post, local: true do |f| %>
+            <div class="mb-3">
+              <%= f.label :address_id, "Select Address", class: "form-label" %>
+              <%= f.collection_radio_buttons :address_id, @addresses, :id, :full_address, { required: true } do |b| %>
+                <div class="form-check mb-2">
+                  <%= b.radio_button class: "form-check-input" %>
+                  <%= b.label class: "form-check-label" do %>
+                    <%= b.object.street_address %>, <%= b.object.city %>, <%= b.object.province.name %> <%= b.object.postal_code %>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+
+            <div class="mb-3">
+              <%= link_to "Add New Address", new_address_path, class: "btn btn-sm btn-secondary" %>
+            </div>
+
+            <div id="order-totals"></div>
+
+            <%= f.submit "Place Order", class: "btn btn-primary btn-lg" %>
+          <% end %>
+        <% else %>
+          <div class="alert alert-warning">
+            You need to add an address before checking out.
+            <%= link_to "Add Address", new_address_path, class: "btn btn-primary" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Order Total</h5>
+        <div id="tax-calculation">
+          <p class="text-muted">Select an address to see tax calculation</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Calculate taxes when address is selected
+  document.addEventListener('DOMContentLoaded', function() {
+    const addressRadios = document.querySelectorAll('input[name="address_id"]');
+    const taxDiv = document.getElementById('tax-calculation');
+    const subtotal = <%= @cart.subtotal %>;
+
+    // Province tax rates (passed from backend)
+    const provinceTaxes = {
+      <% Province.all.each do |province| %>
+        <%= province.id %>: { gst: <%= province.gst_rate %>, pst: <%= province.pst_rate %>, hst: <%= province.hst_rate %>, name: '<%= province.name %>' },
+      <% end %>
+    };
+
+    addressRadios.forEach(radio => {
+      radio.addEventListener('change', function() {
+        // Get province from selected address
+        const addressText = this.nextElementSibling.textContent;
+        const selectedAddress = <%= raw @addresses.to_json(include: :province) %>.find(a => a.id === parseInt(this.value));
+        const provinceId = selectedAddress.province.id;
+        const taxes = provinceTaxes[provinceId];
+
+        const gst = subtotal * (taxes.gst / 100);
+        const pst = subtotal * (taxes.pst / 100);
+        const hst = subtotal * (taxes.hst / 100);
+        const totalTax = gst + pst + hst;
+        const total = subtotal + totalTax;
+
+        let taxHTML = `
+          <p>Subtotal: <strong>$${subtotal.toFixed(2)}</strong></p>
+        `;
+
+        if (taxes.gst > 0) {
+          taxHTML += `<p>GST (${taxes.gst}%): <strong>$${gst.toFixed(2)}</strong></p>`;
+        }
+        if (taxes.pst > 0) {
+          taxHTML += `<p>PST (${taxes.pst}%): <strong>$${pst.toFixed(2)}</strong></p>`;
+        }
+        if (taxes.hst > 0) {
+          taxHTML += `<p>HST (${taxes.hst}%): <strong>$${hst.toFixed(2)}</strong></p>`;
+        }
+
+        taxHTML += `
+          <hr>
+          <h5>Total: <strong>$${total.toFixed(2)}</strong></h5>
+        `;
+
+        taxDiv.innerHTML = taxHTML;
+      });
+    });
+  });
+</script>

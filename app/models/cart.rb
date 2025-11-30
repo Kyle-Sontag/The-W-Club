@@ -14,8 +14,30 @@ class Cart < ApplicationRecord
     end
   end
 
-  def total_price
+  def subtotal
     cart_items.sum { |item| item.quantity * item.product.current_price }
+  end
+
+  def calculate_taxes(province)
+    gst = subtotal * (province.gst_rate / 100)
+    pst = subtotal * (province.pst_rate / 100)
+    hst = subtotal * (province.hst_rate / 100)
+
+    {
+      gst: gst,
+      pst: pst,
+      hst: hst,
+      total_tax: gst + pst + hst
+    }
+  end
+
+  def total_with_tax(province)
+    taxes = calculate_taxes(province)
+    subtotal + taxes[:total_tax]
+  end
+
+  def total_price
+    subtotal
   end
 
   def total_items
