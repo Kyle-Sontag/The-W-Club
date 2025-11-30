@@ -1,0 +1,112 @@
+<h1>Checkout - Step 2: Review Order</h1>
+
+<div class="row justify-content-center">
+  <div class="col-md-10">
+
+    <!-- Order Summary -->
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">Order Summary</h5>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Quantity</th>
+              <th>Price</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @cart.cart_items.each do |item| %>
+              <tr>
+                <td><%= item.product.name %></td>
+                <td><%= item.quantity %></td>
+                <td>$<%= number_with_precision(item.product.current_price, precision: 2) %></td>
+                <td>$<%= number_with_precision(item.total_price, precision: 2) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3" class="text-end"><strong>Subtotal:</strong></td>
+              <td><strong>$<%= number_with_precision(@cart.subtotal, precision: 2) %></strong></td>
+            </tr>
+            <% if @taxes[:gst] > 0 %>
+              <tr>
+                <td colspan="3" class="text-end">GST (<%= @province.gst_rate %>%):</td>
+                <td>$<%= number_with_precision(@taxes[:gst], precision: 2) %></td>
+              </tr>
+            <% end %>
+            <% if @taxes[:pst] > 0 %>
+              <tr>
+                <td colspan="3" class="text-end">PST (<%= @province.pst_rate %>%):</td>
+                <td>$<%= number_with_precision(@taxes[:pst], precision: 2) %></td>
+              </tr>
+            <% end %>
+            <% if @taxes[:hst] > 0 %>
+              <tr>
+                <td colspan="3" class="text-end">HST (<%= @province.hst_rate %>%):</td>
+                <td>$<%= number_with_precision(@taxes[:hst], precision: 2) %></td>
+              </tr>
+            <% end %>
+            <tr>
+              <td colspan="3" class="text-end"><h5>Total:</h5></td>
+              <td><h5><strong>$<%= number_with_precision(@total, precision: 2) %></strong></h5></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+    <!-- Addresses -->
+    <div class="card mb-4">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6">
+            <h5 class="card-title">Billing Address</h5>
+            <address>
+              <% if @billing_address.persisted? %>
+                <%= @billing_address.street %><br>
+                <%= @billing_address.city %>, <%= @billing_address.province.name %><br>
+                <%= @billing_address.postal_code %>
+              <% else %>
+                <%= @billing_address.street %><br>
+                <%= @billing_address.city %>, <%= @billing_address.province.name %><br>
+                <%= @billing_address.postal_code %>
+              <% end %>
+            </address>
+          </div>
+          <div class="col-md-6">
+            <h5 class="card-title">Shipping Address</h5>
+            <address>
+              <% if @shipping_address.persisted? %>
+                <%= @shipping_address.street %><br>
+                <%= @shipping_address.city %>, <%= @shipping_address.province.name %><br>
+                <%= @shipping_address.postal_code %>
+              <% else %>
+                <%= @shipping_address.street %><br>
+                <%= @shipping_address.city %>, <%= @shipping_address.province.name %><br>
+                <%= @shipping_address.postal_code %>
+              <% end %>
+            </address>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment Method (placeholder for Stripe) -->
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">Payment Method</h5>
+        <p class="text-muted">Payment processing will be added in next step</p>
+      </div>
+    </div>
+
+    <%= form_with url: place_order_orders_path, method: :post, local: true do |f| %>
+      <div class="d-flex justify-content-between">
+        <%= link_to "Back to Shipping", checkout_orders_path, class: "btn btn-secondary" %>
+        <%= f.submit "Place Order", class: "btn btn-success btn-lg" %>
+      </div>
+    <% end %>
+  </div>
+</div>

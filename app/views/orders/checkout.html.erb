@@ -1,0 +1,121 @@
+<h1>Checkout - Step 1: Shipping & Billing</h1>
+
+<div class="row justify-content-center">
+  <div class="col-md-10">
+
+    <%= form_with url: review_orders_path, method: :post, local: true, data: { turbo: false } do |f| %>
+
+      <!-- Billing Address Card -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Billing Address</h5>
+
+          <% if @addresses.any? %>
+            <h6>Select Existing Address</h6>
+            <% @addresses.each_with_index do |address, index| %>
+              <div class="form-check mb-2">
+                <%= radio_button_tag :billing_selection, "existing_#{address.id}", index == 0, class: "form-check-input" %>
+                <%= label_tag "billing_selection_existing_#{address.id}", address.full_address, class: "form-check-label" %>
+              </div>
+            <% end %>
+
+            <div class="form-check mb-3">
+              <%= radio_button_tag :billing_selection, "new", false, class: "form-check-input" %>
+              <%= label_tag :billing_selection_new, "Use new address below", class: "form-check-label" %>
+            </div>
+
+            <h6>Or Enter New Address</h6>
+          <% else %>
+            <%= hidden_field_tag :billing_selection, "new" %>
+          <% end %>
+
+          <div class="billing-address-fields">
+            <div class="row">
+              <div class="col-md-12 mb-3">
+                <label for="billing_address_street" class="form-label">Street</label>
+                <input type="text" name="billing_address[street]" id="billing_address_street" class="form-control" placeholder="123 Main St">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="billing_address_city" class="form-label">City</label>
+                <input type="text" name="billing_address[city]" id="billing_address_city" class="form-control" placeholder="Winnipeg">
+              </div>
+              <div class="col-md-3 mb-3">
+                <label for="billing_address_province_id" class="form-label">Province</label>
+                <select name="billing_address[province_id]" id="billing_address_province_id" class="form-select">
+                  <option value="">Select Province</option>
+                  <% Province.all.order(:name).each do |province| %>
+                    <option value="<%= province.id %>"><%= province.name %></option>
+                  <% end %>
+                </select>
+              </div>
+              <div class="col-md-3 mb-3">
+                <label for="billing_address_postal_code" class="form-label">Postal Code</label>
+                <input type="text" name="billing_address[postal_code]" id="billing_address_postal_code" class="form-control" placeholder="R3C 0V8">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Shipping Address Card -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Shipping Address</h5>
+
+          <div class="form-check mb-3">
+            <%= radio_button_tag :shipping_selection, "same", true, class: "form-check-input" %>
+            <%= label_tag :shipping_selection_same, "Same as billing address", class: "form-check-label" %>
+          </div>
+
+          <% if @addresses.any? %>
+            <h6>Select Different Address</h6>
+            <% @addresses.each do |address| %>
+              <div class="form-check mb-2">
+                <%= radio_button_tag :shipping_selection, "existing_#{address.id}", false, class: "form-check-input" %>
+                <%= label_tag "shipping_selection_existing_#{address.id}", address.full_address, class: "form-check-label" %>
+              </div>
+            <% end %>
+
+            <div class="form-check mb-3">
+              <%= radio_button_tag :shipping_selection, "new", false, class: "form-check-input" %>
+              <%= label_tag :shipping_selection_new, "Use new address below", class: "form-check-label" %>
+            </div>
+
+            <h6>Or Enter New Shipping Address</h6>
+          <% end %>
+
+          <div class="shipping-address-fields">
+            <div class="row">
+              <div class="col-md-12 mb-3">
+                <label for="shipping_address_street" class="form-label">Street</label>
+                <input type="text" name="shipping_address[street]" id="shipping_address_street" class="form-control" placeholder="123 Main St">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="shipping_address_city" class="form-label">City</label>
+                <input type="text" name="shipping_address[city]" id="shipping_address_city" class="form-control" placeholder="Winnipeg">
+              </div>
+              <div class="col-md-3 mb-3">
+                <label for="shipping_address_province_id" class="form-label">Province</label>
+                <select name="shipping_address[province_id]" id="shipping_address_province_id" class="form-select">
+                  <option value="">Select Province</option>
+                  <% Province.all.order(:name).each do |province| %>
+                    <option value="<%= province.id %>"><%= province.name %></option>
+                  <% end %>
+                </select>
+              </div>
+              <div class="col-md-3 mb-3">
+                <label for="shipping_address_postal_code" class="form-label">Postal Code</label>
+                <input type="text" name="shipping_address[postal_code]" id="shipping_address_postal_code" class="form-control" placeholder="R3C 0V8">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between">
+        <%= link_to "Back to Cart", cart_path, class: "btn btn-secondary" %>
+        <%= f.submit "Continue to Review Order", class: "btn btn-primary btn-lg" %>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -1,27 +1,18 @@
 <h1>Order Confirmation</h1>
 
-<div class="alert alert-success">
-  <h4>Thank you for your order!</h4>
-  <p>Your order #<%= @order.id %> has been placed successfully.</p>
-</div>
+<div class="row justify-content-center">
+  <div class="col-md-10">
 
-<div class="row">
-  <div class="col-md-8">
+    <div class="alert alert-success">
+      <h4>Thank you for your order!</h4>
+      <p>Your order #<%= @order.id %> has been placed successfully.</p>
+      <p><strong>Order Date:</strong> <%= @order.created_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+    </div>
+
+    <!-- Order Items -->
     <div class="card mb-4">
       <div class="card-body">
-        <h5 class="card-title">Order Details</h5>
-        <p><strong>Order Number:</strong> #<%= @order.id %></p>
-        <p><strong>Order Date:</strong> <%= @order.created_at.strftime("%B %d, %Y at %I:%M %p") %></p>
-        <p><strong>Status:</strong> <span class="badge bg-warning"><%= @order.status.humanize %></span></p>
-
-        <h6 class="mt-4">Shipping Address</h6>
-        <address>
-          <%= @order.address.street %><br>
-          <%= @order.address.city %>, <%= @order.address.province.name %><br>
-          <%= @order.address.postal_code %>
-        </address>
-
-        <h6 class="mt-4">Items Ordered</h6>
+        <h5 class="card-title">Order Items</h5>
         <table class="table">
           <thead>
             <tr>
@@ -41,37 +32,69 @@
               </tr>
             <% end %>
           </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3" class="text-end"><strong>Subtotal:</strong></td>
+              <td><strong>$<%= number_with_precision(@order.subtotal, precision: 2) %></strong></td>
+            </tr>
+            <% if @order.gst > 0 %>
+              <tr>
+                <td colspan="3" class="text-end">GST:</td>
+                <td>$<%= number_with_precision(@order.gst, precision: 2) %></td>
+              </tr>
+            <% end %>
+            <% if @order.pst > 0 %>
+              <tr>
+                <td colspan="3" class="text-end">PST:</td>
+                <td>$<%= number_with_precision(@order.pst, precision: 2) %></td>
+              </tr>
+            <% end %>
+            <% if @order.hst > 0 %>
+              <tr>
+                <td colspan="3" class="text-end">HST:</td>
+                <td>$<%= number_with_precision(@order.hst, precision: 2) %></td>
+              </tr>
+            <% end %>
+            <tr>
+              <td colspan="3" class="text-end"><h5>Total:</h5></td>
+              <td><h5><strong>$<%= number_with_precision(@order.total, precision: 2) %></strong></h5></td>
+            </tr>
+          </tfoot>
         </table>
       </div>
     </div>
-  </div>
 
-  <div class="col-md-4">
-    <div class="card">
+    <!-- Shipping Address -->
+    <div class="card mb-4">
       <div class="card-body">
-        <h5 class="card-title">Order Summary</h5>
-        <p>Subtotal: <strong>$<%= number_with_precision(@order.subtotal, precision: 2) %></strong></p>
-
-        <% if @order.gst > 0 %>
-          <p>GST: <strong>$<%= number_with_precision(@order.gst, precision: 2) %></strong></p>
-        <% end %>
-
-        <% if @order.pst > 0 %>
-          <p>PST: <strong>$<%= number_with_precision(@order.pst, precision: 2) %></strong></p>
-        <% end %>
-
-        <% if @order.hst > 0 %>
-          <p>HST: <strong>$<%= number_with_precision(@order.hst, precision: 2) %></strong></p>
-        <% end %>
-
-        <hr>
-        <h5>Total: <strong>$<%= number_with_precision(@order.total, precision: 2) %></strong></h5>
+        <h5 class="card-title">Shipping Address</h5>
+        <address>
+          <%= @order.address.street %><br>
+          <%= @order.address.city %>, <%= @order.address.province.name %><br>
+          <%= @order.address.postal_code %>
+        </address>
       </div>
     </div>
-  </div>
-</div>
 
-<div class="mt-4">
-  <%= link_to "Continue Shopping", root_path, class: "btn btn-primary" %>
-  <%= link_to "View Order History", orders_path, class: "btn btn-secondary" %>
+    <!-- Order Status -->
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">Order Status</h5>
+        <p><span class="badge bg-warning"><%= @order.status.to_s.capitalize %></span></p>
+      </div>
+    </div>
+
+    <!-- Payment Method -->
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">Payment Method</h5>
+        <p class="text-muted">Payment processing - To be implemented</p>
+      </div>
+    </div>
+
+    <div class="mt-4">
+      <%= link_to "Continue Shopping", root_path, class: "btn btn-primary" %>
+      <%= link_to "View Order History", orders_path, class: "btn btn-secondary" %>
+    </div>
+  </div>
 </div>
