@@ -15,4 +15,8 @@ class Order < ApplicationRecord
   def total_tax
     gst + pst + hst
   end
+
+  def formatted_order_number
+    "#{id.to_s.rjust(6, '0')}"
+  end
 end

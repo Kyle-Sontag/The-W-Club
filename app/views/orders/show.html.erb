@@ -5,7 +5,8 @@
 
     <div class="alert alert-success">
       <h4>Thank you for your order!</h4>
-      <p>Your order #<%= @order.id %> has been placed successfully.</p>
+      <p>Your order has been placed successfully.</p>
+      <p>Order Number: <strong><%= @order.formatted_order_number %></strong></p>
       <p><strong>Order Date:</strong> <%= @order.created_at.strftime("%B %d, %Y at %I:%M %p") %></p>
     </div>
 

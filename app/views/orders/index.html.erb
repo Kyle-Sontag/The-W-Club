@@ -1,2 +1,66 @@
-<h1>Orders#index</h1>
-<p>Find me in app/views/orders/index.html.erb</p>
+<h1>Order History</h1>
+
+<% if @orders.any? %>
+  <div class="row">
+    <% @orders.each do |order| %>
+      <div class="col-md-12 mb-3">
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-8">
+                <h5 class="card-title">Order Number: <%= order.formatted_order_number %></h5>
+                <p class="text-muted mb-1">
+                  <strong>Date:</strong> <%= order.created_at.strftime("%B %d, %Y at %I:%M %p") %>
+                </p>
+                <p class="text-muted mb-1">
+                  <strong>Status:</strong>
+                  <span class="badge bg-<%= order.status == 'pending' ? 'warning' : order.status == 'paid' ? 'success' : 'info' %>">
+                    <%= order.status.to_s.capitalize %>
+                  </span>
+                </p>
+                <p class="text-muted mb-1">
+                  <strong>Items:</strong> <%= order.order_items.sum(:quantity) %>
+                </p>
+              </div>
+              <div class="col-md-4 text-end">
+                <h4 class="text-primary mb-3">$<%= number_with_precision(order.total, precision: 2) %></h4>
+                <%= link_to "View Details", order_path(order), class: "btn btn-primary" %>
+              </div>
+            </div>
+
+            <hr>
+
+            <div class="row">
+              <div class="col-md-12">
+                <strong>Products:</strong>
+                <ul class="list-unstyled mb-0">
+                  <% order.order_items.limit(3).each do |item| %>
+                    <li class="text-muted">
+                      <%= item.product.name %>
+                      <span class="badge bg-secondary"><%= item.quantity %>x</span>
+                      $<%= number_with_precision(item.price_at_purchase, precision: 2) %>
+                    </li>
+                  <% end %>
+                  <% if order.order_items.count > 3 %>
+                    <li class="text-muted">
+                      <em>+ <%= order.order_items.count - 3 %> more items</em>
+                    </li>
+                  <% end %>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <div class="alert alert-info">
+    <h4>No orders yet</h4>
+    <p>You haven't placed any orders yet. <%= link_to "Start shopping!", root_path %></p>
+  </div>
+<% end %>
+
+<div class="mt-4">
+  <%= link_to "← Continue Shopping", root_path, class: "btn btn-secondary" %>
+</div>

@@ -33,6 +33,9 @@
             </li>
           <% end %>
           <li class="nav-item">
+            <%= link_to "Orders", orders_path, class: "nav-link" %>
+          </li>
+          <li class="nav-item">
             <%= link_to cart_path, class: "nav-link" do %>
               Cart (<%= @current_cart.total_items %>)
             <% end %>
