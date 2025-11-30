@@ -45,7 +45,7 @@ class OrdersController < ApplicationController
         @order.order_items.create(
           product: cart_item.product,
           quantity: cart_item.quantity,
-          price: cart_item.product.current_price
+          price_at_purchase: cart_item.product.current_price
         )
       end
 
