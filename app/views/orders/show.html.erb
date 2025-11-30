@@ -1,2 +1,77 @@
-<h1>Orders#show</h1>
-<p>Find me in app/views/orders/show.html.erb</p>
+<h1>Order Confirmation</h1>
+
+<div class="alert alert-success">
+  <h4>Thank you for your order!</h4>
+  <p>Your order #<%= @order.id %> has been placed successfully.</p>
+</div>
+
+<div class="row">
+  <div class="col-md-8">
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">Order Details</h5>
+        <p><strong>Order Number:</strong> #<%= @order.id %></p>
+        <p><strong>Order Date:</strong> <%= @order.created_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+        <p><strong>Status:</strong> <span class="badge bg-warning"><%= @order.status.titleize %></span></p>
+
+        <h6 class="mt-4">Shipping Address</h6>
+        <address>
+          <%= @order.address.street %><br>
+          <%= @order.address.city %>, <%= @order.address.province.name %><br>
+          <%= @order.address.postal_code %>
+        </address>
+
+        <h6 class="mt-4">Items Ordered</h6>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Quantity</th>
+              <th>Price</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @order.order_items.each do |item| %>
+              <tr>
+                <td><%= item.product.name %></td>
+                <td><%= item.quantity %></td>
+                <td>$<%= number_with_precision(item.price_at_purchase, precision: 2) %></td>
+                <td>$<%= number_with_precision(item.quantity * item.price_at_purchase, precision: 2) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Order Summary</h5>
+        <p>Subtotal: <strong>$<%= number_with_precision(@order.subtotal, precision: 2) %></strong></p>
+
+        <% if @order.gst > 0 %>
+          <p>GST: <strong>$<%= number_with_precision(@order.gst, precision: 2) %></strong></p>
+        <% end %>
+
+        <% if @order.pst > 0 %>
+          <p>PST: <strong>$<%= number_with_precision(@order.pst, precision: 2) %></strong></p>
+        <% end %>
+
+        <% if @order.hst > 0 %>
+          <p>HST: <strong>$<%= number_with_precision(@order.hst, precision: 2) %></strong></p>
+        <% end %>
+
+        <hr>
+        <h5>Total: <strong>$<%= number_with_precision(@order.total, precision: 2) %></strong></h5>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mt-4">
+  <%= link_to "Continue Shopping", root_path, class: "btn btn-primary" %>
+  <%= link_to "View Order History", orders_path, class: "btn btn-secondary" %>
+</div>
