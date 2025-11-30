@@ -8,6 +8,9 @@ Rails.application.routes.draw do
     resources :categories
   end
 
+  resource :cart, only: [ :show ]
+  resources :cart_items, only: [ :create, :update, :destroy ]
+
   get "search", to: "products#search", as: "search"
   get "sale", to: "categories#sale", as: "sale"
   resources :categories, only: [ :show ]

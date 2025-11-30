@@ -28,6 +28,8 @@
       <p><%= @product.description %></p>
     </div>
 
+    <%= button_to "Add to Cart", cart_items_path(product_id: @product.id), method: :post, class: "btn btn-primary btn-lg mb-3" %>
+
     <%= link_to "← Back to #{@product.category.name}", category_path(@product.category), class: "btn btn-secondary mb-4" %>
   </div>
 </div>
