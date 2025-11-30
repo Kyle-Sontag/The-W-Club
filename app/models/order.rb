@@ -10,7 +10,7 @@ class Order < ApplicationRecord
   validates :hst, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :total, presence: true, numericality: { greater_than: 0 }
 
-  enum status: { pending: 0, paid: 1, shipped: 2 }
+  enum :status, { pending: 0, paid: 1, shipped: 2 }
 
   def total_tax
     gst + pst + hst
