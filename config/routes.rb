@@ -10,6 +10,7 @@ Rails.application.routes.draw do
 
   resource :cart, only: [ :show ]
   resources :cart_items, only: [ :create, :update, :destroy ]
+  resources :addresses
 
   get "search", to: "products#search", as: "search"
   get "sale", to: "categories#sale", as: "sale"
