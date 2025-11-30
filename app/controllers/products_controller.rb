@@ -58,5 +58,7 @@ class ProductsController < ApplicationController
 
   def show
     @product = Product.find(params[:id])
+    # Store the referring page if it's from a category or search page
+    session[:product_return_to] = request.referer if request.referer.present?
   end
 end
