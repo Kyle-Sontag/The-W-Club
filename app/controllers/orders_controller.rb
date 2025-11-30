@@ -23,11 +23,6 @@ class OrdersController < ApplicationController
   end
 
   def review
-    # Debug - let's see what we're getting
-    puts "=" * 50
-    puts "PARAMS: #{params.inspect}"
-    puts "=" * 50
-
     # Parse billing selection
     billing_selection = params[:billing_selection]
 

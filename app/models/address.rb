@@ -7,6 +7,10 @@ class Address < ApplicationRecord
   validates :postal_code, presence: true
 
   def full_address
-    "#{street}, #{city}, #{province.name} #{postal_code}"
+    if province.present?
+      "#{street}, #{city}, #{province.name} #{postal_code}"
+    else
+      "#{street}, #{city}, #{postal_code}"
+    end
   end
 end
