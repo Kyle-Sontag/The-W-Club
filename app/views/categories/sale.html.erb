@@ -61,7 +61,10 @@
 </div>
 
 <div class="d-flex justify-content-center my-4">
-  <%= paginate @products, params: { query: params[:query], category_id: params[:category_id], filter: params[:filter], sort: params[:sort] } %>
+  <%= paginate @products,
+      params: { search: params[:search], category_id: params[:category_id], sort: params[:sort] },
+      outer_window: 2,
+      inner_window: 2 %>
 </div>
 
 <% if @products.empty? %>
